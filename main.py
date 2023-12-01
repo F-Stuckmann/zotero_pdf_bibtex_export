@@ -73,6 +73,6 @@ if __name__ == '__main__':
         entry['file'] = combined_file
     
     # Write the updated BibTeX back to the file
-    with open(bib[:-4]+"2" + bib[-4:], 'w') as bibtex_file:
+    with open(bib, 'w') as bibtex_file:
         bibtexparser.dump(bib_database, bibtex_file)
 
