@@ -1,5 +1,6 @@
 import os
 import fnmatch
+import platform
 import shlex
 import bibtexparser
 
@@ -13,14 +14,23 @@ def find_pdf_files(directory):
 import argparse
 
 if __name__ == '__main__':
+    is_macos = platform.system() == 'Darwin'
+
+    
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--dir', type=str, help='Path to the exported Zotero directory', required=True)
-    parser.add_argument("--zotero", help="Path to the Zotero directory", required=True)
+    parser.add_argument("--zotero", help="Path to the Zotero directory. On MacOS this is usually ~/Zotero")
 
     args = parser.parse_args()
 
     zotero_directory = args.dir
     base_directory = args.zotero
+    if base_directory is None:
+        if is_macos:
+            base_directory = os.path.expanduser("~/Zotero/storage")
+        else:
+            raise Exception("Please provide the Zotero directory with \n--zotero <DIR>. \n\nIf no pdf are exported (zotero sometimes fails to export them), the zotero directory will be used to get the pdf files.")
+
     global_pdf_files = find_pdf_files(base_directory)
     
     # find .bib file in zotero_directory load .bib file
